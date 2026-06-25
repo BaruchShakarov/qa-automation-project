@@ -1,38 +1,61 @@
-# QA Automation Project 🚀
+# QA Automation Project
 
-Comprehensive QA automation framework with Playwright, Flask, and AI-powered test generation.
+Real-time QA automation testing with Flask, Playwright & Dashboard
 
-## Features
+## Quick Start (3 Terminals)
 
-✅ **Flask Web Application** - Full-stack app with auth, products, cart, admin panel  
-✅ **20 Playwright Tests** - 15 manual + 5 Claude AI-generated  
-✅ **Real-time Dashboard** - Live test results visualization  
-✅ **HTML Reports** - Beautiful test execution reports  
-✅ **GitHub Integration** - Push & see results  
+Terminal 1:
+```bash
+python app.py
+```
+
+Terminal 2:
+```bash
+python dashboard.py
+```
+
+Terminal 3:
+```bash
+rm -rf allure-results && mkdir allure-results
+pytest test_full_app.py test_claude_v2.py test_advanced_working.py -v --alluredir=allure-results
+```
+
+Watch: http://localhost:5002
+
+## Tests: 30/30 ✅
+
+- test_full_app.py: 15 tests
+- test_claude_v2.py: 5 tests
+- test_advanced_working.py: 10 tests
+
+## Stack
+
+Flask | Playwright | Pytest | Allure | GitHub
 
 ## Setup
 
-### Prerequisites
-- Python 3.13+
-- pip
-
-### Installation
-
 ```bash
-# Clone repository
-git clone https://github.com/BaruchShakarov/qa-automation-project.git
-cd qa-automation-project
-
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Mac/Linux
-# or
-.venv\Scripts\activate  # Windows
-
-# Install dependencies
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Environment Variables
+Create `.env`:
+## API
 
-Create `.env` file:
+- POST /api/register
+- POST /api/login
+- GET /api/products
+- GET /api/cart/<user_id>
+- POST /api/cart
+- DELETE /api/cart/<item_id>
+- POST /api/checkout/<user_id>
+
+## Dashboard
+
+- Real-time stats
+- Pass/Fail filters
+- 5s auto-refresh
+- Flat design
+
+Author: Baruh Shakarov
