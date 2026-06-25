@@ -7,12 +7,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard_new.html')  # שנה לשם החדש
 
 
 @app.route('/api/results')
 def get_results():
-    results = {}  # use dict להימנע מדופליקציות
+    results = {}
 
     if os.path.exists('allure-results'):
         for file in os.listdir('allure-results'):
@@ -22,7 +22,6 @@ def get_results():
                         data = json.load(f)
                         fullName = data.get('fullName', 'Unknown')
 
-                        # Use fullName as key (avoid duplicates)
                         results[fullName] = {
                             'name': fullName.split('#')[-1] if '#' in fullName else fullName,
                             'status': data.get('status', 'unknown'),
@@ -31,7 +30,6 @@ def get_results():
                 except:
                     pass
 
-    # Convert to list
     tests_list = list(results.values())
     total = len(tests_list)
     passed = sum(1 for r in tests_list if r.get('status') == 'passed')

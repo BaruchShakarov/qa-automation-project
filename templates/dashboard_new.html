@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafbfc; }
+        .wrapper { max-width: 1300px; margin: 0 auto; padding: 50px 30px; }
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 36px; color: #0d1117; font-weight: 600; margin-bottom: 10px; }
+        .header p { font-size: 14px; color: #656d76; }
+
+        .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+        .metric { background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 32px 24px; text-align: center; }
+        .metric-label { font-size: 12px; color: #656d76; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+        .metric-value { font-size: 56px; font-weight: 700; color: #0d1117; }
+
+        .bar { background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 32px 24px; margin-bottom: 40px; }
+        .bar h2 { font-size: 16px; color: #0d1117; font-weight: 600; margin-bottom: 24px; }
+        .bar-inner { height: 48px; background: #e5e7eb; border-radius: 6px; overflow: hidden; display: flex; margin-bottom: 20px; }
+        .bar-pass { background: #3fb950; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; }
+        .bar-fail {
+    background: #da3633;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 600;
+    min-width: 40px;
+}
+
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+        .stat-box { background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 24px; text-align: center; }
+        .stat-box-num { font-size: 40px; font-weight: 700; color: #0d1117; margin-bottom: 8px; }
+        .stat-box-text { font-size: 13px; color: #656d76; }
+
+        .tests { background: #fff; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+        .tests-header { display: flex; justify-content: space-between; align-items: center; padding: 24px 24px; border-bottom: 1px solid #e5e7eb; }
+        .tests-title { font-size: 16px; font-weight: 600; color: #0d1117; }
+        .tests-filter { display: flex; gap: 8px; }
+        .tests-filter button { padding: 6px 12px; border: 1px solid #d0d7de; background: #fff; color: #0d1117; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
+        .tests-filter button:hover { border-color: #0d1117; }
+        .tests-filter button.active { background: #0d1117; color: #fff; border-color: #0d1117; }
+
+        .tests-list { max-height: 600px; overflow-y: auto; }
+        .test-row { padding: 16px 24px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+        .test-row:last-child { border-bottom: none; }
+        .test-name { color: #0d1117; flex: 1; }
+        .test-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+        .badge-pass { background: #dafbe1; color: #0d3a1a; }
+        .badge-fail { background: #ffebe6; color: #5d0f0a; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <h1>QA Test Dashboard</h1>
+            <p>Real-time test results monitoring</p>
+        </div>
+
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-label">Total Tests</div>
+                <div class="metric-value" id="total-metric">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Passed</div>
+                <div class="metric-value" id="pass-metric">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Failed</div>
+                <div class="metric-value" id="fail-metric">0</div>
+            </div>
+        </div>
+
+        <div class="bar">
+            <h2>Pass Rate</h2>
+            <div class="bar-inner">
+                <div class="bar-pass" id="bar-pass" style="width: 0%"><span id="bar-pass-text">0%</span></div>
+                <div class="bar-fail" id="bar-fail" style="width: 0%"><span id="bar-fail-text">0%</span></div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-box-num" id="stats-pass">0</div>
+                <div class="stat-box-text">Passed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num" id="stats-fail">0</div>
+                <div class="stat-box-text">Failed</div>
+            </div>
+        </div>
+
+        <div class="tests">
+            <div class="tests-header">
+                <div class="tests-title">Test Results</div>
+                <div class="tests-filter">
+                    <button class="active" onclick="filterTests('all')">All</button>
+                    <button onclick="filterTests('passed')">Passed</button>
+                    <button onclick="filterTests('failed')">Failed</button>
+                </div>
+            </div>
+            <div class="tests-list" id="tests-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let allTests = [];
+        let currentFilter = 'all';
+
+        async function loadData() {
+            const res = await fetch('/api/results');
+            const data = await res.json();
+            allTests = data.tests;
+
+            document.getElementById('total-metric').textContent = data.total;
+            document.getElementById('pass-metric').textContent = data.passed;
+            document.getElementById('fail-metric').textContent = data.failed;
+            document.getElementById('stats-pass').textContent = data.passed;
+            document.getElementById('stats-fail').textContent = data.failed;
+
+            const pct = data.total > 0 ? (data.passed / data.total * 100) : 0;
+            document.getElementById('bar-pass').style.width = pct + '%';
+            document.getElementById('bar-fail').style.width = (100 - pct) + '%';
+            document.getElementById('bar-pass-text').textContent = Math.round(pct) + '%';
+            document.getElementById('bar-fail-text').textContent = Math.round(100 - pct) + '%';
+
+            renderTests(currentFilter);
+        }
+
+        function renderTests(filter) {
+            const container = document.getElementById('tests-list');
+            container.innerHTML = '';
+
+            const filtered = allTests.filter(t =>
+                filter === 'all' || t.status === filter
+            );
+
+            filtered.forEach(test => {
+                const row = document.createElement('div');
+                row.className = 'test-row';
+                row.innerHTML = `
+                    <div class="test-name">${test.name}</div>
+                    <div class="test-badge ${test.status === 'passed' ? 'badge-pass' : 'badge-fail'}">
+                        ${test.status.toUpperCase()}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function filterTests(f) {
+            currentFilter = f;
+            document.querySelectorAll('.tests-filter button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTests(f);
+        }
+
+        loadData();
+        setInterval(loadData, 5000);
+    </script>
+</body>
+</html>
