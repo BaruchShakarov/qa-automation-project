@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QA Automation App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+            display: flex;
+            gap: 20px;
+            color: white;
+        }
+
+        nav button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        nav button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        button {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #message {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: none;
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .product-card {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-actions button {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .cart-item {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-total {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <button onclick="showPage('login')">🔐 Login</button>
+        <button onclick="showPage('register')">📝 Register</button>
+        <button onclick="showPage('products')">🛍️ Products</button>
+        <button onclick="showPage('cart')">🛒 Cart</button>
+        <button onclick="showPage('admin')">⚙️ Admin</button>
+        <button onclick="showPage('about')">ℹ️ About</button>
+    </nav>
+
+    <div class="container">
+        <div id="message"></div>
+
+        <!-- Login Page -->
+        <div id="login" class="page active">
+            <h1>🔐 Login</h1>
+            <div class="form-group">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <button onclick="login()">Login</button>
+            </div>
+        </div>
+
+        <!-- Register Page -->
+        <div id="register" class="page">
+            <h1>📝 Register</h1>
+            <div class="form-group">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="reg-username" placeholder="Enter your username">
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" placeholder="Enter your email">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" placeholder="Enter your password">
+                </div>
+                <button onclick="register()">Register</button>
+            </div>
+        </div>
+
+        <!-- Products Page -->
+        <div id="products" class="page">
+            <h1>🛍️ Products</h1>
+            <div id="products-list"></div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cart" class="page">
+            <h1>🛒 Cart</h1>
+            <div id="cart-items"></div>
+            <div id="cart-total" class="cart-total" style="display: none;">Total: $0.00</div>
+            <button onclick="checkout()" style="margin-top: 20px;">Checkout</button>
+        </div>
+
+        <!-- Admin Page -->
+        <div id="admin" class="page">
+            <h1>⚙️ Admin - Add Product</h1>
+            <div class="form-group">
+                <div class="input-group">
+                    <label>Product Name</label>
+                    <input type="text" id="admin-product-name" placeholder="Enter product name">
+                </div>
+                <div class="input-group">
+                    <label>Price</label>
+                    <input type="number" id="admin-product-price" placeholder="Enter price" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label>Description</label>
+                    <input type="text" id="admin-product-description" placeholder="Enter description">
+                </div>
+                <button onclick="addProduct()">Add Product</button>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div id="about" class="page">
+            <h1>ℹ️ About</h1>
+            <p>This is a QA Automation test application.</p>
+            <p>Built with Flask backend and Playwright testing framework.</p>
+            <p><a href="#" onclick="showPage('products')">Check out our products</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5001';
+        let currentUser = null;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'products') loadProducts();
+            if (pageId === 'cart') loadCart();
+        }
+
+        function showMessage(message, isSuccess) {
+            const div = document.getElementById('message');
+            div.textContent = message;
+            div.className = isSuccess ? 'success' : 'error';
+            div.style.display = 'block';
+
+            setTimeout(() => {
+                div.style.display = 'none';
+            }, 5000);
+        }
+
+        // Auth Functions
+        async function register() {
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            if (!username || !email || !password) {
+                showMessage('All fields required', false);
+                return;
+            }
+
+            const response = await fetch(API_URL + '/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+
+            if (response.ok) {
+                currentUser = data.user_id;
+                document.getElementById('reg-username').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-password').value = '';
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showMessage('Email and password required', false);
+                return;
+            }
+
+            const response = await fetch(API_URL + '/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+
+            if (response.ok) {
+                currentUser = data.user_id;
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                showPage('products');
+            }
+        }
+
+        // Product Functions
+        async function loadProducts() {
+            const response = await fetch(API_URL + '/api/products');
+            const data = await response.json();
+
+            let html = '';
+            data.products.forEach(product => {
+                html += `
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">$${product.price.toFixed(2)}</div>
+                        </div>
+                        <div class="product-actions">
+                            <button onclick="addToCart(${product.id})">Add to Cart</button>
+                            <button onclick="deleteProduct(${product.id})" style="background-color: #e74c3c;">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('products-list').innerHTML = html;
+        }
+
+        async function addToCart(productId) {
+            if (!currentUser) {
+                showMessage('Please login first', false);
+                return;
+            }
+
+            const response = await fetch(API_URL + '/api/cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: currentUser, product_id: productId })
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+        }
+
+        async function deleteProduct(productId) {
+            if (!confirm('Are you sure?')) return;
+
+            const response = await fetch(API_URL + `/api/products/${productId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+            loadProducts();
+        }
+
+        // Cart Functions
+        async function loadCart() {
+            if (!currentUser) {
+                document.getElementById('cart-items').innerHTML = '<div class="empty-message">Please login first</div>';
+                return;
+            }
+
+            const response = await fetch(API_URL + `/api/cart/${currentUser}`);
+            const data = await response.json();
+
+            let html = '';
+            if (data.items.length === 0) {
+                html = '<div class="empty-message">Your cart is empty</div>';
+            } else {
+                data.items.forEach(item => {
+                    html += `
+                        <div class="cart-item">
+                            <div>${item.product_name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}</div>
+                            <button onclick="removeFromCart(${item.id})" style="background-color: #e74c3c;">Remove</button>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('cart-items').innerHTML = html;
+
+            if (data.total > 0) {
+                document.getElementById('cart-total').style.display = 'block';
+                document.getElementById('cart-total').textContent = `Total: $${data.total.toFixed(2)}`;
+            } else {
+                document.getElementById('cart-total').style.display = 'none';
+            }
+        }
+
+        async function removeFromCart(itemId) {
+            const response = await fetch(API_URL + `/api/cart/${itemId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+            loadCart();
+        }
+
+        async function checkout() {
+            if (!currentUser) {
+                showMessage('Please login first', false);
+                return;
+            }
+
+            const response = await fetch(API_URL + `/api/checkout/${currentUser}`, {
+                method: 'POST'
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+            loadCart();
+        }
+
+        // Admin Functions
+        async function addProduct() {
+            const name = document.getElementById('admin-product-name').value;
+            const price = document.getElementById('admin-product-price').value;
+            const description = document.getElementById('admin-product-description').value;
+
+            if (!name || !price) {
+                showMessage('Name and price required', false);
+                return;
+            }
+
+            const response = await fetch(API_URL + '/api/products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, price: parseFloat(price), description })
+            });
+
+            const data = await response.json();
+            showMessage(data.message || data.error, response.ok);
+
+            if (response.ok) {
+                document.getElementById('admin-product-name').value = '';
+                document.getElementById('admin-product-price').value = '';
+                document.getElementById('admin-product-description').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
